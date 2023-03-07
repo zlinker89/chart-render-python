@@ -1,3 +1,5 @@
-fastapi==0.92.0
+fastapi==0.88.0
 numpy==1.24.1
 plotly==5.13.1
+uvicorn==0.20.0
+kaleido==0.2.1
