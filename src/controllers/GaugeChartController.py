@@ -1,25 +1,26 @@
 import plotly.graph_objects as go
 import numpy as np
 from src.utils.constanst import RANGES
+import uuid
 class GaugeChartController:
     def get_data_from_range(self, rsi: float):
+        """
+            Get label and color by rsi
+        """
         for range in RANGES:
             if range['min'] <= rsi <= range['max']:
                 return {"label": range['label'], "color": range['color']}
-            
-    def get_range(self, quadrants):
-        list_values = []
-        for index, range in enumerate(RANGES):
-            list_values.append(quadrants[index] / (range['max'] - range['min']))
-        return list_values
 
     def generate_gauge(self, rsi: float):
+        """
+            Generate gauge chart ploty PIE
+        """
+        path_file = "public/images/%s.png" % str(uuid.uuid4())
         datos = self.get_data_from_range(rsi)
         plot_bgcolor = "#fff"
         quadrant_colors = [plot_bgcolor, "#f25829", "#eff229", "#85e043", "#eff229", "#f25829"] 
         quadrant_text = ["", "<b>Altamente Corrosiva</b>", "<b>Ligeramente Corrosiva</b>", "<b>Equilibrio</b>", "<b>Ligeramente Incrustante</b>", "<b>Altamente Incrustante</b>"]
-        n_quadrants = len(quadrant_colors) - 1
-
+        # n_quadrants = len(quadrant_colors) - 1
         current_value = rsi
         min_value = 0
         max_value = 10
@@ -76,5 +77,5 @@ class GaugeChartController:
                 ]
             )
         )
-        fig.write_image("public/images/gauge.png")
-        return "public/images/gauge.png"
+        fig.write_image(path_file)
+        return path_file
