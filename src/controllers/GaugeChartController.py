@@ -1,43 +1,61 @@
 import plotly.graph_objects as go
 import numpy as np
-
+from src.utils.constanst import RANGES
 class GaugeChartController:
+    def get_data_from_range(self, rsi: float):
+        for range in RANGES:
+            if range['min'] <= rsi <= range['max']:
+                return {"label": range['label'], "color": range['color']}
+            
+    def get_range(self, quadrants):
+        list_values = []
+        for index, range in enumerate(RANGES):
+            list_values.append(quadrants[index] / (range['max'] - range['min']))
+        return list_values
 
-    def generateGauge(self, rsi: float):
+    def generate_gauge(self, rsi: float):
+        datos = self.get_data_from_range(rsi)
         plot_bgcolor = "#fff"
-        quadrant_colors = [plot_bgcolor, "#f25829", "#f2a529", "#eff229", "#85e043", "#2bad4e"] 
-        quadrant_text = ["", "<b>Very high</b>", "<b>High</b>", "<b>Medium</b>", "<b>Low</b>", "<b>Very low</b>"]
+        quadrant_colors = [plot_bgcolor, "#f25829", "#eff229", "#85e043", "#eff229", "#f25829"] 
+        quadrant_text = ["", "<b>Altamente Corrosiva</b>", "<b>Ligeramente Corrosiva</b>", "<b>Equilibrio</b>", "<b>Ligeramente Incrustante</b>", "<b>Altamente Incrustante</b>"]
         n_quadrants = len(quadrant_colors) - 1
 
         current_value = rsi
         min_value = 0
-        max_value = 50
-        hand_length = np.sqrt(2) / 4
+        max_value = 10
+        hand_length = np.sqrt(2) / 3.5
         hand_angle = np.pi * (1 - (max(min_value, min(max_value, current_value)) - min_value) / (max_value - min_value))
-
+        # quadrants = [0.5, 0.25, 0.07,0.7,0.011]
+        # print([0.5] + (np.ones(n_quadrants) / 2 / n_quadrants).tolist())
+        quadrants = [0.5, 0.125, 0.025,0.050,0.050,0.255]
+        # print(self.get_range(quadrants))
         fig = go.Figure(
             data=[
                 go.Pie(
-                    values=[0.5] + (np.ones(n_quadrants) / 2 / n_quadrants).tolist(),
+                    values=quadrants,                    
+                    # values=[0.5] + (np.ones(n_quadrants) / 2 / n_quadrants).tolist(),
                     rotation=90,
-                    hole=0.5,
+                    hole=0.7,
                     marker_colors=quadrant_colors,
                     text=quadrant_text,
                     textinfo="text",
                     hoverinfo="skip",
+                    textfont={"color": "#000", "size": 12},
+                    sort=False
                 ),
             ],
             layout=go.Layout(
                 showlegend=False,
                 margin=dict(b=0,t=10,l=10,r=10),
-                width=450,
-                height=450,
+                width=750,
+                height=750,
                 paper_bgcolor=plot_bgcolor,
                 annotations=[
                     go.layout.Annotation(
-                        text=f"<b>IOT sensot value:</b><br>{current_value} units",
+                        font={"color": datos['color'], 'size': 20},
+                        text=f"<b>%s:</b><br>{current_value}" % datos['label'],
                         x=0.5, xanchor="center", xref="paper",
-                        y=0.25, yanchor="bottom", yref="paper",
+                        y=0.5, yanchor="bottom", yref="paper",
                         showarrow=False,
                     )
                 ],
@@ -45,14 +63,14 @@ class GaugeChartController:
                     go.layout.Shape(
                         type="circle",
                         x0=0.48, x1=0.52,
-                        y0=0.48, y1=0.52,
+                        y0=0.58, y1=0.62,
                         fillcolor="#333",
                         line_color="#333",
                     ),
                     go.layout.Shape(
                         type="line",
                         x0=0.5, x1=0.5 + hand_length * np.cos(hand_angle),
-                        y0=0.5, y1=0.5 + hand_length * np.sin(hand_angle),
+                        y0=0.6, y1=0.5 + hand_length * np.sin(hand_angle),
                         line=dict(color="#333", width=4)
                     )
                 ]

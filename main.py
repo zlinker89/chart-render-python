@@ -13,5 +13,5 @@ def gauge_chart(rsi: float):
         Generate chart with ryznar stability index
     """
     gauge = GaugeChartController()
-    img = gauge.generateGauge(rsi)
+    img = gauge.generate_gauge(rsi)
     return FileResponse(img, media_type="image/png")
