@@ -97,6 +97,11 @@ class GaugeChartController:
         """
         path_file = "public/images/%s.png" % str(uuid.uuid4())
         datos = self.get_data_from_range(rsi)
+        min_value, max_value  = 4, 8.5
+        hand_length = np.sqrt(2) / 3
+        hand_angle = np.pi * \
+            (1 - (max(min_value, min(max_value, rsi)) -
+             min_value) / (max_value - min_value))
         fig = go.Figure(
             data=[go.Indicator(
                 domain={'x': [0, 1], 'y': [0, 1]},
@@ -106,7 +111,7 @@ class GaugeChartController:
                 # delta={'reference': 380},
 
                 gauge={'axis': {
-                    'range': [4, 8.5],
+                    'range': [min_value, max_value],
                     'ticktext': list(map(lambda x: x['label'], RANGES)),
                     'showticklabels': True
                 },
@@ -116,8 +121,8 @@ class GaugeChartController:
             ],
             layout=go.Layout(
                 showlegend=False,
-                margin=dict(b=0, t=10, l=30, r=30),
-                width=850,
+                margin=dict(b=0, t=10, l=80, r=80),
+                width=900,
                 height=750,
                 paper_bgcolor='#FFF',
                 annotations=[
@@ -126,15 +131,29 @@ class GaugeChartController:
                         font={"color": datos['color'], 'size': 30},
                         text=f"<b>%s:</b><br>{rsi}" % datos['label'],
                         x=0.5, xanchor="center", xref="paper",
-                        y=0.23, yanchor="bottom", yref="paper",
+                        y=0.25, yanchor="bottom", yref="paper",
                         showarrow=False,
                     )
-                ],))  # 'threshold': {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': 10}
+                ],
+                shapes=[
+                    go.layout.Shape(
+                        type="line",
+                        x0=0.5, x1=0.5 + hand_length * np.cos(hand_angle),
+                        y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
+                        line=dict(color="#333", width=4)
+                    )
+                ]
+                ))  # 'threshold': {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': 10}
         # fig.update_layout(paper_bgcolor = "#FFF", font = {'color': "#FFF", 'family': "Arial"})
         # fig.add_annotation(x=0.43, y=0.85, text='Altamente <br>Incrustante', showarrow=False)
         # fig.add_annotation(x=0.58, y=0.85, text='Ligeramente <br>Incrustante', showarrow=False)
         # fig.add_annotation(x=0.80, y=0.77, text='Equilibrio', showarrow=False)
         # fig.add_annotation(x=0.95, y=0.70, text='Ligeramente <br>Corrosiva', showarrow=False)
         # fig.add_annotation(x=1.02, y=0.55, text='Altamente <br>Corrosiva', showarrow=False)
+        fig.add_annotation(x=-0.085, y=0.46, text='Altamente <br>Incrustante', showarrow=False)
+        fig.add_annotation(x=0.1, y=0.75, text='Ligeramente <br>Incrustante', showarrow=False)
+        fig.add_annotation(x=0.60, y=0.80, text='Equilibrio', showarrow=False)
+        fig.add_annotation(x=0.95, y=0.70, text='Ligeramente <br>Corrosiva', showarrow=False)
+        fig.add_annotation(x=1.1, y=0.43, text='Altamente <br>Corrosiva', showarrow=False)
         fig.write_image(path_file)
         return path_file

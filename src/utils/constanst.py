@@ -22,13 +22,13 @@ RANGES = [
     },
     {
         "min": 7.01,
-        "max": 7.59,
+        "max": 7.5,
         "label": "Ligeramente Corrosiva",
         "color": "rgba(240,236,40,1)",
         "dark_color": "#706F13",
     },
     {
-        "min": 7.6,
+        "min": 7.51,
         "max": 8.5,
         "label": "Altamente Corrosiva",
         "color": "rgba(240,44,37,1)",
