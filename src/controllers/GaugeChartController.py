@@ -5,6 +5,7 @@ import uuid
 
 
 class GaugeChartController:
+    color_text = 'rgb(30, 55, 99)'
     def get_data_from_range(self, rsi: float):
         """
             Get label and color by rsi
@@ -76,14 +77,14 @@ class GaugeChartController:
                         type="circle",
                         x0=0.48, x1=0.52,
                         y0=0.58, y1=0.62,
-                        fillcolor="#333",
-                        line_color="#333",
+                        fillcolor=self.color_text,
+                        line_color=self.color_text,
                     ),
                     go.layout.Shape(
                         type="line",
                         x0=0.5, x1=0.5 + hand_length * np.cos(hand_angle),
                         y0=0.6, y1=0.5 + hand_length * np.sin(hand_angle),
-                        line=dict(color="#333", width=4)
+                        line=dict(color=self.color_text, width=4)
                     )
                 ]
             )
@@ -97,7 +98,7 @@ class GaugeChartController:
         """
         path_file = "public/images/%s.png" % str(uuid.uuid4())
         datos = self.get_data_from_range(rsi)
-        min_value, max_value  = 4, 8.5
+        min_value, max_value = 4, 8.5
         hand_length = np.sqrt(2) / 3
         hand_angle = np.pi * \
             (1 - (max(min_value, min(max_value, rsi)) -
@@ -106,7 +107,7 @@ class GaugeChartController:
             data=[go.Indicator(
                 domain={'x': [0, 1], 'y': [0, 1]},
                 value=rsi,
-                mode="gauge+number",  # +delta
+                mode="gauge",  # +delta
                 # title={'text': datos["label"]},
                 # delta={'reference': 380},
 
@@ -127,33 +128,94 @@ class GaugeChartController:
                 paper_bgcolor='#FFF',
                 annotations=[
                     go.layout.Annotation(
-                        bgcolor='#FFF',
+                        # bgcolor='rgba(0,0,0,0.8)',
                         font={"color": datos['color'], 'size': 30},
                         text=f"<b>%s:</b><br>{rsi}" % datos['label'],
                         x=0.5, xanchor="center", xref="paper",
-                        y=0.25, yanchor="bottom", yref="paper",
+                        y=0.10, yanchor="bottom", yref="paper",
                         showarrow=False,
                     )
                 ],
                 shapes=[
                     go.layout.Shape(
+                        type="circle",
+                        x0=0.46, x1=0.54,
+                        y0=0.21, y1=0.29,
+                        fillcolor=self.color_text,
+                        line_color=self.color_text,
+                    ),
+                    go.layout.Shape(
                         type="line",
                         x0=0.5, x1=0.5 + hand_length * np.cos(hand_angle),
                         y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
-                        line=dict(color="#333", width=4)
+                        line=dict(color=self.color_text, width=4)
+                    ),
+                    go.layout.Shape(
+                        type="line",
+                        x0=0.5 + 0.02 , x1=0.5 + hand_length * np.cos(hand_angle),
+                        y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
+                        line=dict(color=self.color_text, width=4)
+                    ),
+                    go.layout.Shape(
+                        type="line",
+                        x0=0.5 + 0.01 , x1=0.5 + hand_length * np.cos(hand_angle),
+                        y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
+                        line=dict(color=self.color_text, width=4)
+                    ),
+                    go.layout.Shape(
+                        type="line",
+                        x0=0.5 + 0.015 , x1=0.5 + hand_length * np.cos(hand_angle),
+                        y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
+                        line=dict(color=self.color_text, width=4)
+                    ),
+                    go.layout.Shape(
+                        type="line",
+                        x0=0.5 + 0.005 , x1=0.5 + hand_length * np.cos(hand_angle),
+                        y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
+                        line=dict(color=self.color_text, width=4)
+                    ),
+                    go.layout.Shape(
+                        type="line",
+                        x0=0.5 - 0.02 , x1=0.5 + hand_length * np.cos(hand_angle),
+                        y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
+                        line=dict(color=self.color_text, width=4)
+                    ),
+                    go.layout.Shape(
+                        type="line",
+                        x0=0.5 - 0.015 , x1=0.5 + hand_length * np.cos(hand_angle),
+                        y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
+                        line=dict(color=self.color_text, width=4)
+                    ),
+                    go.layout.Shape(
+                        type="line",
+                        x0=0.5 - 0.010 , x1=0.5 + hand_length * np.cos(hand_angle),
+                        y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
+                        line=dict(color=self.color_text, width=4)
+                    ),
+                    go.layout.Shape(
+                        type="line",
+                        x0=0.5 - 0.005 , x1=0.5 + hand_length * np.cos(hand_angle),
+                        y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
+                        line=dict(color=self.color_text, width=4)
+                    ),
+                    go.layout.Shape(
+                        type="circle",
+                        x0=0.48, x1=0.52,
+                        y0=0.23, y1=0.27,
+                        fillcolor="#FFF",
+                        line_color="#FFF",
                     )
                 ]
-                ))  # 'threshold': {'line': {'color': "red", 'width': 4}, 'thickness': 0.75, 'value': 10}
-        # fig.update_layout(paper_bgcolor = "#FFF", font = {'color': "#FFF", 'family': "Arial"})
-        # fig.add_annotation(x=0.43, y=0.85, text='Altamente <br>Incrustante', showarrow=False)
-        # fig.add_annotation(x=0.58, y=0.85, text='Ligeramente <br>Incrustante', showarrow=False)
-        # fig.add_annotation(x=0.80, y=0.77, text='Equilibrio', showarrow=False)
-        # fig.add_annotation(x=0.95, y=0.70, text='Ligeramente <br>Corrosiva', showarrow=False)
-        # fig.add_annotation(x=1.02, y=0.55, text='Altamente <br>Corrosiva', showarrow=False)
-        fig.add_annotation(x=-0.085, y=0.46, text='Altamente <br>Incrustante', showarrow=False)
-        fig.add_annotation(x=0.1, y=0.75, text='Ligeramente <br>Incrustante', showarrow=False)
+            ))
+        fig.update_layout(font = {'color': self.color_text, 'family': "Arial"})
+        fig.add_annotation(
+            x=-0.085, y=0.46, text='Altamente <br>Incrustante', showarrow=False)
+        fig.add_annotation(
+            x=0.1, y=0.75, text='Ligeramente <br>Incrustante', showarrow=False)
         fig.add_annotation(x=0.60, y=0.80, text='Equilibrio', showarrow=False)
-        fig.add_annotation(x=0.95, y=0.70, text='Ligeramente <br>Corrosiva', showarrow=False)
-        fig.add_annotation(x=1.1, y=0.43, text='Altamente <br>Corrosiva', showarrow=False)
+        fig.add_annotation(
+            x=0.95, y=0.70, text='Ligeramente <br>Corrosiva', showarrow=False)
+        fig.add_annotation(
+            x=1.1, y=0.43, text='Altamente <br>Corrosiva', showarrow=False)
         fig.write_image(path_file)
         return path_file
