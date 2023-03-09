@@ -1,11 +1,15 @@
 import plotly.graph_objects as go
+import plotly.express as px
 import numpy as np
 from src.utils.constanst import RANGES
 import uuid
+from skimage import io
+import os
 
 
 class GaugeChartController:
     color_text = 'rgb(30, 55, 99)'
+
     def get_data_from_range(self, rsi: float):
         """
             Get label and color by rsi
@@ -99,6 +103,19 @@ class GaugeChartController:
         path_file = "public/images/%s.png" % str(uuid.uuid4())
         datos = self.get_data_from_range(rsi)
         min_value, max_value = 4, 8.5
+        if not (min_value <= rsi <= max_value):
+            img = io.imread(os.getcwd() + '/public/error.jpg')
+            fig = px.imshow(img)
+            fig.add_annotation(
+                x=0.5,
+                y=-0.15,
+                text="<a href='http://www.freepik.com'>Designed by stories / Freepik</a>",
+                xref="paper",
+                yref="paper",
+                showarrow=False,
+                font_size=20)
+            fig.write_image(path_file)
+            return path_file
         hand_length = np.sqrt(2) / 3
         hand_angle = np.pi * \
             (1 - (max(min_value, min(max_value, rsi)) -
@@ -107,10 +124,7 @@ class GaugeChartController:
             data=[go.Indicator(
                 domain={'x': [0, 1], 'y': [0, 1]},
                 value=rsi,
-                mode="gauge",  # +delta
-                # title={'text': datos["label"]},
-                # delta={'reference': 380},
-
+                mode="gauge",
                 gauge={'axis': {
                     'range': [min_value, max_value],
                     'ticktext': list(map(lambda x: x['label'], RANGES)),
@@ -152,49 +166,49 @@ class GaugeChartController:
                     ),
                     go.layout.Shape(
                         type="line",
-                        x0=0.5 + 0.02 , x1=0.5 + hand_length * np.cos(hand_angle),
+                        x0=0.5 + 0.02, x1=0.5 + hand_length * np.cos(hand_angle),
                         y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
                         line=dict(color=self.color_text, width=4)
                     ),
                     go.layout.Shape(
                         type="line",
-                        x0=0.5 + 0.01 , x1=0.5 + hand_length * np.cos(hand_angle),
+                        x0=0.5 + 0.01, x1=0.5 + hand_length * np.cos(hand_angle),
                         y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
                         line=dict(color=self.color_text, width=4)
                     ),
                     go.layout.Shape(
                         type="line",
-                        x0=0.5 + 0.015 , x1=0.5 + hand_length * np.cos(hand_angle),
+                        x0=0.5 + 0.015, x1=0.5 + hand_length * np.cos(hand_angle),
                         y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
                         line=dict(color=self.color_text, width=4)
                     ),
                     go.layout.Shape(
                         type="line",
-                        x0=0.5 + 0.005 , x1=0.5 + hand_length * np.cos(hand_angle),
+                        x0=0.5 + 0.005, x1=0.5 + hand_length * np.cos(hand_angle),
                         y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
                         line=dict(color=self.color_text, width=4)
                     ),
                     go.layout.Shape(
                         type="line",
-                        x0=0.5 - 0.02 , x1=0.5 + hand_length * np.cos(hand_angle),
+                        x0=0.5 - 0.02, x1=0.5 + hand_length * np.cos(hand_angle),
                         y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
                         line=dict(color=self.color_text, width=4)
                     ),
                     go.layout.Shape(
                         type="line",
-                        x0=0.5 - 0.015 , x1=0.5 + hand_length * np.cos(hand_angle),
+                        x0=0.5 - 0.015, x1=0.5 + hand_length * np.cos(hand_angle),
                         y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
                         line=dict(color=self.color_text, width=4)
                     ),
                     go.layout.Shape(
                         type="line",
-                        x0=0.5 - 0.010 , x1=0.5 + hand_length * np.cos(hand_angle),
+                        x0=0.5 - 0.010, x1=0.5 + hand_length * np.cos(hand_angle),
                         y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
                         line=dict(color=self.color_text, width=4)
                     ),
                     go.layout.Shape(
                         type="line",
-                        x0=0.5 - 0.005 , x1=0.5 + hand_length * np.cos(hand_angle),
+                        x0=0.5 - 0.005, x1=0.5 + hand_length * np.cos(hand_angle),
                         y0=0.25, y1=0.25 + hand_length * np.sin(hand_angle),
                         line=dict(color=self.color_text, width=4)
                     ),
@@ -207,7 +221,7 @@ class GaugeChartController:
                     )
                 ]
             ))
-        fig.update_layout(font = {'color': self.color_text, 'family': "Arial"})
+        fig.update_layout(font={'color': self.color_text, 'family': "Arial"})
         fig.add_annotation(
             x=-0.085, y=0.46, text='Altamente <br>Incrustante', showarrow=False)
         fig.add_annotation(
