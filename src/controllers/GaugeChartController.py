@@ -98,7 +98,7 @@ class GaugeChartController:
 
     def generate_gauge_step(self, rsi: float):
         """
-            Generate gauge chart ploty GAUGE
+            Generate gauge chart ploty Gauge
         """
         path_file = os.getcwd() + "public/images/%s.png" % str(uuid.uuid4())
         datos = self.get_data_from_range(rsi)
