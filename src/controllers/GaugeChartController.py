@@ -100,7 +100,7 @@ class GaugeChartController:
         """
             Generate gauge chart ploty Gauge
         """
-        path_file = os.getcwd() + "public/images/%s.png" % str(uuid.uuid4())
+        path_file = os.getcwd() + "/public/images/%s.png" % str(uuid.uuid4())
         datos = self.get_data_from_range(rsi)
         min_value, max_value = 4, 8.5
         if not (min_value <= rsi <= max_value):
